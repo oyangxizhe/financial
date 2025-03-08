@@ -1,0 +1,8 @@
+<publishData>
+  <publishTarget publishUrl="D:\wwwroot\uploadfile\">
+    <file relUrl="bin/UpLoadFile.pdb" publishTime="12/21/2014 15:24:39" />
+    <file relUrl="bin/UpLoadFile.dll" publishTime="12/21/2014 15:24:40" />
+    <file relUrl="Default.aspx" publishTime="12/21/2014 15:21:58" />
+    <file relUrl="Web.config" publishTime="12/21/2014 17:41:25" />
+  </publishTarget>
+</publishData>

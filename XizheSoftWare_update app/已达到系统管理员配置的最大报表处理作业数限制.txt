@@ -1,0 +1,5 @@
+具体为修改下面两个键的值。
+每一处：
+HKEY_LOCAL_MACHINE;SOFTWARE;Crystal Decisions;10.0;Report ApplicationServer;InprocServer;PrintJobLimit修改为1000
+每二处
+HKEY_LOCAL_MACHINE;SOFTWARE;Crystal Decisions;10.0;Report ApplicationServer;Server;PrintJobLimit 修改为1000 

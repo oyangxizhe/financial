@@ -1,0 +1,348 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C25489F8-4A51-47B8-B117-D016DEB71343}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CSPSS</RootNamespace>
+    <AssemblyName>财务管理系统</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <StartupObject>
+    </StartupObject>
+    <ApplicationIcon>xz 200X200.ico</ApplicationIcon>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=11.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c" />
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Forms.DataVisualization, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="XizheC, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Debug\XizheC.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BASE_INFO\CURRENCY.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BASE_INFO\CURRENCY.designer.cs">
+      <DependentUpon>CURRENCY.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BASE_INFO\CURRENCYT.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BASE_INFO\CURRENCYT.designer.cs">
+      <DependentUpon>CURRENCYT.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BASE_INFO\DEPART.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BASE_INFO\DEPART.designer.cs">
+      <DependentUpon>DEPART.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BASE_INFO\EMPLOYEE_INFO.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BASE_INFO\EMPLOYEE_INFO.designer.cs">
+      <DependentUpon>EMPLOYEE_INFO.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BASE_INFO\PAYMENT_METHOD .cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BASE_INFO\PAYMENT_METHOD .designer.cs">
+      <DependentUpon>PAYMENT_METHOD .cs</DependentUpon>
+    </Compile>
+    <Compile Include="BASE_INFO\POSITION.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BASE_INFO\POSITION.designer.cs">
+      <DependentUpon>POSITION.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Class1.cs" />
+    <Compile Include="LOGIN.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LOGIN.designer.cs">
+      <DependentUpon>LOGIN.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MAIN.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MAIN.designer.cs">
+      <DependentUpon>MAIN.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="REPORT_MANAGE\BALANCE_SEARCH.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="REPORT_MANAGE\BALANCE_SEARCH.designer.cs">
+      <DependentUpon>BALANCE_SEARCH.cs</DependentUpon>
+    </Compile>
+    <Compile Include="USER_MANAGE\EDIT_PWD.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="USER_MANAGE\EDIT_PWD.designer.cs">
+      <DependentUpon>EDIT_PWD.cs</DependentUpon>
+    </Compile>
+    <Compile Include="USER_MANAGE\EDIT_RIGHT.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="USER_MANAGE\EDIT_RIGHT.designer.cs">
+      <DependentUpon>EDIT_RIGHT.cs</DependentUpon>
+    </Compile>
+    <Compile Include="USER_MANAGE\USER_INFO.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="USER_MANAGE\USER_INFO.designer.cs">
+      <DependentUpon>USER_INFO.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BASE_INFO\ACCOUNTANT_COURSE .cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BASE_INFO\ACCOUNTANT_COURSE .designer.cs">
+      <DependentUpon>ACCOUNTANT_COURSE .cs</DependentUpon>
+    </Compile>
+    <Compile Include="VOUCHER_MANAGE\CLOSING_ACCOUNT.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VOUCHER_MANAGE\CLOSING_ACCOUNT.designer.cs">
+      <DependentUpon>CLOSING_ACCOUNT.cs</DependentUpon>
+    </Compile>
+    <Compile Include="VOUCHER_MANAGE\INITIAL_CONSULENZA.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VOUCHER_MANAGE\INITIAL_CONSULENZA.designer.cs">
+      <DependentUpon>INITIAL_CONSULENZA.cs</DependentUpon>
+    </Compile>
+    <Compile Include="VOUCHER_MANAGE\INITIAL_PERIOD.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VOUCHER_MANAGE\INITIAL_PERIOD.designer.cs">
+      <DependentUpon>INITIAL_PERIOD.cs</DependentUpon>
+    </Compile>
+    <Compile Include="VOUCHER_MANAGE\THE_FINAL_BILL.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VOUCHER_MANAGE\THE_FINAL_BILL.designer.cs">
+      <DependentUpon>THE_FINAL_BILL.cs</DependentUpon>
+    </Compile>
+    <Compile Include="VOUCHER_MANAGE\VOUCHER.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VOUCHER_MANAGE\VOUCHER.designer.cs">
+      <DependentUpon>VOUCHER.cs</DependentUpon>
+    </Compile>
+    <Compile Include="VOUCHER_MANAGE\VOUCHERT.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VOUCHER_MANAGE\VOUCHERT.designer.cs">
+      <DependentUpon>VOUCHERT.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="bin\Debug\财务管理系统.exe.config" />
+    <None Include="bin\Debug\财务管理系统.vshost.exe.config" />
+    <None Include="bin\Debug\财务管理系统.vshost.exe.manifest" />
+    <None Include="bin\Debug\资产负债表.xls" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="BASE_INFO\CURRENCY.resx">
+      <DependentUpon>CURRENCY.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BASE_INFO\CURRENCYT.resx">
+      <DependentUpon>CURRENCYT.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BASE_INFO\DEPART.resx">
+      <DependentUpon>DEPART.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BASE_INFO\EMPLOYEE_INFO.resx">
+      <DependentUpon>EMPLOYEE_INFO.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BASE_INFO\PAYMENT_METHOD .resx">
+      <DependentUpon>PAYMENT_METHOD .cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BASE_INFO\POSITION.resx">
+      <DependentUpon>POSITION.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LOGIN.resx">
+      <DependentUpon>LOGIN.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MAIN.resx">
+      <DependentUpon>MAIN.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="REPORT_MANAGE\BALANCE_SEARCH.resx">
+      <DependentUpon>BALANCE_SEARCH.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="USER_MANAGE\EDIT_PWD.resx">
+      <DependentUpon>EDIT_PWD.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="USER_MANAGE\EDIT_RIGHT.resx">
+      <DependentUpon>EDIT_RIGHT.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="USER_MANAGE\USER_INFO.resx">
+      <DependentUpon>USER_INFO.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BASE_INFO\ACCOUNTANT_COURSE .resx">
+      <DependentUpon>ACCOUNTANT_COURSE .cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VOUCHER_MANAGE\CLOSING_ACCOUNT.resx">
+      <DependentUpon>CLOSING_ACCOUNT.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VOUCHER_MANAGE\INITIAL_CONSULENZA.resx">
+      <DependentUpon>INITIAL_CONSULENZA.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VOUCHER_MANAGE\INITIAL_PERIOD.resx">
+      <DependentUpon>INITIAL_PERIOD.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VOUCHER_MANAGE\THE_FINAL_BILL.resx">
+      <DependentUpon>THE_FINAL_BILL.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VOUCHER_MANAGE\VOUCHER.resx">
+      <DependentUpon>VOUCHER.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VOUCHER_MANAGE\VOUCHERT.resx">
+      <DependentUpon>VOUCHERT.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bin\CrystalDecisions.CrystalReports.Engine.dll" />
+    <Content Include="bin\CrystalDecisions.Data.AdoDotNetInterop.dll" />
+    <Content Include="bin\CrystalDecisions.ReportSource.dll" />
+    <Content Include="bin\CrystalDecisions.Shared.dll" />
+    <Content Include="bin\Debug\Image\1.png" />
+    <Content Include="bin\Debug\Image\10.png" />
+    <Content Include="bin\Debug\Image\11.png" />
+    <Content Include="bin\Debug\Image\11s.png" />
+    <Content Include="bin\Debug\Image\12.png" />
+    <Content Include="bin\Debug\Image\13.png" />
+    <Content Include="bin\Debug\Image\132.png" />
+    <Content Include="bin\Debug\Image\14.png" />
+    <Content Include="bin\Debug\Image\15.png" />
+    <Content Include="bin\Debug\Image\16.png" />
+    <Content Include="bin\Debug\Image\17.png" />
+    <Content Include="bin\Debug\Image\18.png" />
+    <Content Include="bin\Debug\Image\19.png" />
+    <Content Include="bin\Debug\Image\1X24X24.png" />
+    <Content Include="bin\Debug\Image\2.png" />
+    <Content Include="bin\Debug\Image\20.png" />
+    <Content Include="bin\Debug\Image\201.png" />
+    <Content Include="bin\Debug\Image\20150101124303991_easyicon_net_48.png" />
+    <Content Include="bin\Debug\Image\21.png" />
+    <Content Include="bin\Debug\Image\211.png" />
+    <Content Include="bin\Debug\Image\22.png" />
+    <Content Include="bin\Debug\Image\23.png" />
+    <Content Include="bin\Debug\Image\24.png" />
+    <Content Include="bin\Debug\Image\25.png" />
+    <Content Include="bin\Debug\Image\26.png" />
+    <Content Include="bin\Debug\Image\27.png" />
+    <Content Include="bin\Debug\Image\28.png" />
+    <Content Include="bin\Debug\Image\29.png" />
+    <Content Include="bin\Debug\Image\3.png" />
+    <Content Include="bin\Debug\Image\30.png" />
+    <Content Include="bin\Debug\Image\31.png" />
+    <Content Include="bin\Debug\Image\32.png" />
+    <Content Include="bin\Debug\Image\33.png" />
+    <Content Include="bin\Debug\Image\34.png" />
+    <Content Include="bin\Debug\Image\35.png" />
+    <Content Include="bin\Debug\Image\36.png" />
+    <Content Include="bin\Debug\Image\37.png" />
+    <Content Include="bin\Debug\Image\38.png" />
+    <Content Include="bin\Debug\Image\39.png" />
+    <Content Include="bin\Debug\Image\4.png" />
+    <Content Include="bin\Debug\Image\40.png" />
+    <Content Include="bin\Debug\Image\41.png" />
+    <Content Include="bin\Debug\Image\42.png" />
+    <Content Include="bin\Debug\Image\5.png" />
+    <Content Include="bin\Debug\Image\6.png" />
+    <Content Include="bin\Debug\Image\7.png" />
+    <Content Include="bin\Debug\Image\8.png" />
+    <Content Include="bin\Debug\Image\88.png" />
+    <Content Include="bin\Debug\Image\9.png" />
+    <Content Include="bin\Debug\Image\99.png" />
+    <Content Include="bin\Debug\Image\del.png" />
+    <Content Include="bin\Debug\Image\search.png" />
+    <Content Include="bin\Debug\Image\search2.png" />
+    <Content Include="bin\Debug\Microsoft.Office.Interop.Excel.dll" />
+    <Content Include="bin\Debug\Microsoft.Vbe.Interop.dll" />
+    <Content Include="bin\Debug\office.dll" />
+    <Content Include="bin\Debug\XizheC.dll" />
+    <Content Include="bin\Debug\XizheC.pdb" />
+    <Content Include="bin\Debug\财务管理系统.exe" />
+    <Content Include="bin\Debug\财务管理系统.pdb" />
+    <Content Include="bin\Debug\财务管理系统.vshost.exe" />
+    <Content Include="bin\Microsoft.Office.Interop.Excel.dll" />
+    <Content Include="bin\Microsoft.Vbe.Interop.dll" />
+    <Content Include="bin\office.dll" />
+    <Content Include="Image\btnAdd.png" />
+    <Content Include="Image\btnExit.png" />
+    <Content Include="Image\btnSave.png" />
+    <Content Include="Image\btnSearch.png" />
+    <Content Include="Image\Excel1.png" />
+    <Content Include="xz 200X200.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
