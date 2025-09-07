@@ -13,9 +13,19 @@ using System.Data.SqlClient;
 using System.Text;
 using System.IO;
 using System.Windows.Forms;
-using Excel = Microsoft.Office.Interop.Excel;
 using System.Security.Cryptography;
-using System.Collections .Generic ;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Xml;
+using System.Net;
+using Microsoft.CSharp;
+using System.Threading.Tasks;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
+using System.IO;
+using Microsoft.CSharp;
+
 namespace XizheC
 {
     public class basec
@@ -29,11 +39,51 @@ namespace XizheC
             get { return _ErrowInfo; }
 
         }
-        private static  bool _IFExecutionSUCCESS;
+        private string _DATA_SOURCE;
+        public string DATA_SOURCE
+        {
+
+            set { _DATA_SOURCE = value; }
+            get { return _DATA_SOURCE; }
+
+        }
+        private string _SQLCON;
+        public string SQLCON
+        {
+
+            set { _SQLCON = value; }
+            get { return _SQLCON; }
+
+        }
+        private static bool _IFExecutionSUCCESS;
         public static bool IFExecution_SUCCESS
         {
             set { _IFExecutionSUCCESS = value; }
             get { return _IFExecutionSUCCESS; }
+
+        }
+        private string _DATA_BASE;
+        public string DATA_BASE
+        {
+
+            set { _DATA_BASE = value; }
+            get { return _DATA_BASE; }
+
+        }
+        private string _USER_ID;
+        public string USER_ID
+        {
+
+            set { _USER_ID = value; }
+            get { return _USER_ID; }
+
+        }
+        private string _PWD;
+        public string PWD
+        {
+
+            set { _PWD = value; }
+            get { return _PWD; }
 
         }
         int i, j;
@@ -45,16 +95,194 @@ namespace XizheC
         /// 
         // 摘要:
         DataTable dt = new DataTable();
+
+
+
         public SqlConnection getcon()
         {
-            //string M_str_sqlcon = "";
-            //string M_str_sqlcon = "Data Source=oyxxi.com;Database=FINANCIAL;User id=xizhe_software;PWD=XizheDream$*555";
-            string M_str_sqlcon = ConfigurationManager.AppSettings["ConnectionDB"].ToString();
-            SqlConnection myCon = new SqlConnection(M_str_sqlcon);
+            SqlConnection myCon = new SqlConnection(GET_SQLCONNECTION_STRING());
             return myCon;
+        }
+
+        public string GET_SQLCONNECTION_STRING()
+        {
+            try
+            {
+                string url = ConfigurationManager.AppSettings["api-uri"].ToString() + "/s_connectionstring.aspx";
+                string conn_token = ConfigurationManager.AppSettings["conn-token"].ToString();
+
+                string parameter = string.Format("conn-token={0}", conn_token);
+                Console.WriteLine("请求参数: " + parameter);
+
+                JArray jar = this.RETURN_JARRAY(url, parameter);
+
+                if (jar != null && jar.Count > 0)
+                {
+                    string M_str_sqlcon = jar[0].ToString();
+                    Console.WriteLine("成功获取连接字符串: " + M_str_sqlcon);
+                    return M_str_sqlcon;
+                }
+                else
+                {
+                    ErrowInfo = "未能获取到连接字符串。错误信息: " + ErrowInfo;
+                    Console.WriteLine(ErrowInfo);
+                    return "";
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrowInfo = "获取连接字符串异常: " + ex.Message;
+                Console.WriteLine(ErrowInfo);
+                return "";
+            }
+        }
+
+
+        #region RETURN_JARRAY
+        public JArray RETURN_JARRAY(string url, string parameter)
+        {
+            string urlPage = url;
+            Stream outstream = null;
+            Stream instream = null;
+            StreamReader sr = null;
+            HttpWebResponse response = null;
+            HttpWebRequest request = null;
+            JArray jar = new JArray();
+            try
+            {
+                Encoding encoding = Encoding.GetEncoding("UTF-8");
+                byte[] data = encoding.GetBytes(parameter);
+                request = WebRequest.Create(urlPage) as HttpWebRequest;
+                request.Method = "POST";
+                request.ContentType = "application/x-www-form-urlencoded";
+                request.ContentLength = data.Length;
+                outstream = request.GetRequestStream();
+                outstream.Write(data, 0, data.Length);
+                outstream.Flush();
+                outstream.Close();
+                response = request.GetResponse() as HttpWebResponse;
+                instream = response.GetResponseStream();
+                sr = new StreamReader(instream, encoding);
+                string a = sr.ReadToEnd();
+                string b = "";
+                for (int i = 0; i < a.Length; i++)
+                {
+                    if (Convert.ToInt32(a[i]) != 60)
+                    {
+                        b = b + a[i];
+                    }
+                    else
+                    {
+                        break;
+                    }
+
+                }
+                jar = JArray.Parse(b);
+            }
+            catch (Exception ex)
+            {
+                ErrowInfo = ex.Message;
+            }
+            return jar;
         }
         #endregion
 
+
+
+
+        #endregion
+
+        #region RETURN_UNTIL_CHAR
+        public string RETURN_UNTIL_CHAR(string HAVE_NAME_STRING, char C1)
+        {
+            string v = "";
+            if (HAVE_NAME_STRING.Length > 0)
+            {
+                int q = Convert.ToInt32(C1);
+                for (int i = 0; i < HAVE_NAME_STRING.Length; i++)
+                {
+                    int p = Convert.ToInt32(HAVE_NAME_STRING[i]);
+
+                    if (p != q)
+                    {
+                        v = v + HAVE_NAME_STRING[i];
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+
+            return v;
+        }
+        #endregion
+        #region RETURN_APPOINT_UNTIL_CHAR
+        public string RETURN_APPOINT_UNTIL_CHAR(string HAVE_NAME_STRING, int START, char C1)
+        {
+            string v = "";
+            if (HAVE_NAME_STRING.Length > 0 && HAVE_NAME_STRING.Length >= START)
+            {
+                int q = Convert.ToInt32(C1);
+                for (int i = START - 1; i < HAVE_NAME_STRING.Length; i++)
+                {
+                    int p = Convert.ToInt32(HAVE_NAME_STRING[i]);
+
+                    if (p != q)
+                    {
+                        v = v + HAVE_NAME_STRING[i];
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+
+            return v;
+        }
+        #endregion
+        #region RETURN_SERVER_IP_OR_DOMAIN
+        public string RETURN_SERVER_IP_OR_DOMAIN()
+        {
+            string v = "";
+            if (File.Exists(System.IO.Path.GetFullPath("Configuration.config")))
+            {
+                //MessageBox.Show(GetSERVER_IP(System.IO.Path.GetFullPath("项目管理系统客户端.exe.config")));
+                v = RETURN_APPOINT_UNTIL_CHAR(GetSERVER_IP(System.IO.Path.GetFullPath("Configuration.config")), 8, '/');
+            }
+            else
+            {
+                MessageBox.Show("不存在指定的配置文件");
+            }
+            return v;
+        }
+        #endregion
+        #region GetSERVER_IP
+        public string GetSERVER_IP(string Dir)
+        {
+            //获取客户端应用程序及服务器端升级程序的最近一次更新版本
+            string LastUpdateVersion = "";
+            string AutoUpdaterFileName = Dir;
+            if (!File.Exists(AutoUpdaterFileName))
+                return LastUpdateVersion;
+            //打开xml文件  
+            FileStream myFile = new FileStream(AutoUpdaterFileName, FileMode.Open);
+            //xml文件阅读器  
+            XmlTextReader xml = new XmlTextReader(myFile);
+            while (xml.Read())
+            {
+                if (xml.Name == "endpoint")
+                {  //获取升级文档的最后一次更新版本
+                    LastUpdateVersion = xml.GetAttribute("address");
+                    break;
+                }
+            }
+            xml.Close();
+            myFile.Close();
+            return LastUpdateVersion;
+        }
+        #endregion
         #region  执行SqlCommand命令
         /// <summary>
         /// 执行SqlCommand
@@ -341,7 +569,18 @@ namespace XizheC
             return r;
         }
         #endregion
+        #region  GET_IFExecutionSUCCESS_HINT_INFO
+        public string GET_IFExecutionSUCCESS_HINT_INFO(bool SET_IFExecutionSUCCESS)
+        {
+            string v = "";
+            if (SET_IFExecutionSUCCESS == true)
+            {
 
+                v = "已保存成功!";
+            }
+            return v;
+        }
+        #endregion
         #region yesno
         public int yesno(string vars)
         {
@@ -488,7 +727,61 @@ namespace XizheC
             return dtk;
         }
         #endregion
+        #region DES加密解密
+        /// <summary> 
+        /// DES加密 
+        /// </summary> 
+        /// <param name="data">加密数据</param> 
+        /// <param name="key">8位字符的密钥字符串</param> 
+        /// <param name="iv">8位字符的初始化向量字符串</param> 
+        /// <returns></returns> 
+        public static string DESEncrypt(string data, string key, string iv)
+        {
+            byte[] byKey = System.Text.ASCIIEncoding.ASCII.GetBytes(key);
+            byte[] byIV = System.Text.ASCIIEncoding.ASCII.GetBytes(iv);
 
+            DESCryptoServiceProvider cryptoProvider = new DESCryptoServiceProvider();
+            int i = cryptoProvider.KeySize;
+            MemoryStream ms = new MemoryStream();
+            CryptoStream cst = new CryptoStream(ms, cryptoProvider.CreateEncryptor(byKey, byIV), CryptoStreamMode.Write);
+
+            StreamWriter sw = new StreamWriter(cst);
+            sw.Write(data);
+            sw.Flush();
+            cst.FlushFinalBlock();
+            sw.Flush();
+            return Convert.ToBase64String(ms.GetBuffer(), 0, (int)ms.Length);
+        }
+
+        /// <summary> 
+        /// DES解密 
+        /// </summary> 
+        /// <param name="data">解密数据</param> 
+        /// <param name="key">8位字符的密钥字符串(需要和加密时相同)</param> 
+        /// <param name="iv">8位字符的初始化向量字符串(需要和加密时相同)</param> 
+        /// <returns></returns> 
+        public static string DESDecrypt(string data, string key, string iv)
+        {
+            byte[] byKey = System.Text.ASCIIEncoding.ASCII.GetBytes(key);
+            byte[] byIV = System.Text.ASCIIEncoding.ASCII.GetBytes(iv);
+
+            byte[] byEnc;
+            try
+            {
+                byEnc = Convert.FromBase64String(data);
+            }
+            catch
+            {
+                return null;
+            }
+
+            DESCryptoServiceProvider cryptoProvider = new DESCryptoServiceProvider();
+            MemoryStream ms = new MemoryStream(byEnc);
+            CryptoStream cst = new CryptoStream(ms, cryptoProvider.CreateDecryptor(byKey, byIV), CryptoStreamMode.Read);
+            StreamReader sr = new StreamReader(cst);
+            return sr.ReadToEnd();
+        }
+        #endregion
         #region getstoragecount
         public DataTable getstoragecount()
         {
@@ -609,7 +902,30 @@ A.STORAGEID=B.STORAGEID  WHERE A.GODEID='" + GodEID + "' GROUP BY A.WAREID,A.STO
             return z;
         }
         #endregion
-
+        #region GetIP4Address //取得IPV4地址
+        public string GetIP4Address()
+        {
+            string IPV4 = "";
+            string hostName = Dns.GetHostName();
+            System.Net.IPAddress[] addressList = Dns.GetHostAddresses(hostName);
+            foreach (IPAddress IPA in addressList)
+            {
+                if (IPA.AddressFamily.ToString() == "InterNetwork")
+                {
+                    IPV4 = IPA.ToString();
+                }
+            }
+            return IPV4;
+        }
+        #endregion
+        #region GetComputerName //取得本地计算机名
+        public string GetComputerName()
+        {
+            string hostName = "";
+            hostName = Dns.GetHostName();
+            return hostName;
+        }
+        #endregion
         #region juagedate
         public bool juagedate(string StartDate, string EndDate)
         {
@@ -633,7 +949,7 @@ A.STORAGEID=B.STORAGEID  WHERE A.GODEID='" + GodEID + "' GROUP BY A.WAREID,A.STO
         #region juagedate
         public bool juageStartDateAndEndDatedate(string StartDate, string EndDate)
         {
-            bool b = false ;
+            bool b = false;
             if (StartDate != "" && EndDate != "")
             {
                 if (Convert.ToDateTime(StartDate) > Convert.ToDateTime(EndDate))
@@ -656,16 +972,52 @@ A.STORAGEID=B.STORAGEID  WHERE A.GODEID='" + GodEID + "' GROUP BY A.WAREID,A.STO
         }
         #endregion
         #region Exists
-        public bool exists(string TableName, string ColumnName, string ColumnValue,string REMARK)
+        public bool exists(string TableName, string ColumnName, string ColumnValue, string REMARK)
         {
-           dt = this.getdt("SELECT *  FROM " + TableName + " WHERE "+ColumnName +"='"+ColumnValue +"'");
+            dt = this.getdt("SELECT *  FROM " + TableName + " WHERE " + ColumnName + "='" + ColumnValue + "'");
             if (dt.Rows.Count > 0)
             {
-                MessageBox.Show(REMARK +"", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(REMARK + "", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return true;
-                
+
             }
             return false;
+        }
+        #endregion
+        #region XML_TO_DT
+        public static DataTable XML_TO_DT(string xmlFilePath)
+        {
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            if (File.Exists(xmlFilePath))
+            {
+                try
+                {
+                    string path = xmlFilePath;
+                    StringReader StrStream = null;
+                    XmlTextReader Xmlrdr = null;
+                    XmlDocument xmldoc = new XmlDocument();
+                    //根据地址加载Xml文件  
+                    xmldoc.Load(path);
+                    //读取文件中的字符流  
+                    StrStream = new StringReader(xmldoc.InnerXml);
+                    //获取StrStream中的数据  
+                    Xmlrdr = new XmlTextReader(StrStream);
+                    //ds获取Xmlrdr中的数据  
+                    ds.ReadXml(Xmlrdr);
+                    dt = ds.Tables[0];
+
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                return dt;
+            }
+            else
+            {
+                return null;
+            }
         }
         #endregion
         #region maxstoragecount
@@ -1026,7 +1378,7 @@ C.SELLUNITPRICE,C.TAXRATE,C.CUID,D.CNAME,F.SELLDATE,F.SELLERID,G.ORDERDATE,C.DEL
             return dtt;
         }
         #endregion
-        public bool JuageCoxBoxValueNoExists(string [] arr, string b,string RemarkInfo)
+        public bool JuageCoxBoxValueNoExists(string[] arr, string b, string RemarkInfo)
         {
             DataTable dtzz = new DataTable();
             dtzz.Columns.Add("X", typeof(string));
@@ -1042,7 +1394,7 @@ C.SELLUNITPRICE,C.TAXRATE,C.CUID,D.CNAME,F.SELLDATE,F.SELLERID,G.ORDERDATE,C.DEL
             {
 
             }
-            else if(b=="")
+            else if (b == "")
             {
                 b1 = true;
                 MessageBox.Show(RemarkInfo + " 不能为空！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1050,14 +1402,14 @@ C.SELLUNITPRICE,C.TAXRATE,C.CUID,D.CNAME,F.SELLDATE,F.SELLERID,G.ORDERDATE,C.DEL
             else
             {
                 b1 = true;
-                MessageBox.Show(b+ " 不是预设值！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(b + " 不是预设值！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             return b1;
         }
         public bool JuageIfAllowKEYIN(List<string> list, string b, string RemarkInfo)
         {
-            bool b1 = false ;
-            if(b=="")
+            bool b1 = false;
+            if (b == "")
             {
                 b1 = true;
                 MessageBox.Show(RemarkInfo + " 不能为空！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1066,7 +1418,7 @@ C.SELLUNITPRICE,C.TAXRATE,C.CUID,D.CNAME,F.SELLDATE,F.SELLERID,G.ORDERDATE,C.DEL
             {
 
                 b1 = true;
-                MessageBox.Show(b + " 不是预设值！"+RemarkInfo, "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(b + " 不是预设值！" + RemarkInfo, "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             return b1;
         }
@@ -1441,155 +1793,155 @@ WHERE A.WAREID='" + wareid + "' AND A.COID='" + coid + "' GROUP BY A.WAREID,A.CO
         #region ExcelPrint
         public void ExcelPrint(DataTable dt2, string BillName, string Printpath)
         {
-            int j = 0;
-            SaveFileDialog sfdg = new SaveFileDialog();
-            //sfdg.DefaultExt = @"D:\xls";
-            sfdg.Filter = "Excel(*.xls)|*.xls";
-            sfdg.RestoreDirectory = true;
-            sfdg.FileName = Printpath;
-            sfdg.CreatePrompt = true;
-            Microsoft.Office.Interop.Excel.Application application = new Microsoft.Office.Interop.Excel.Application();
-            Excel.Workbook workbook;
-            Excel.Worksheet worksheet;
+            /* int j = 0;
+             SaveFileDialog sfdg = new SaveFileDialog();
+             //sfdg.DefaultExt = @"D:\xls";
+             sfdg.Filter = "Excel(*.xls)|*.xls";
+             sfdg.RestoreDirectory = true;
+             sfdg.FileName = Printpath;
+             sfdg.CreatePrompt = true;
+             Microsoft.Office.Interop.Excel.Application application = new Microsoft.Office.Interop.Excel.Application();
+             Excel.Workbook workbook;
+             Excel.Worksheet worksheet;
 
-            DateTime date1 = Convert.ToDateTime(dt2.Rows[0]["订货日期"].ToString());
-            string d1 = date1.ToString("yyyy-MM-dd");
-            DateTime date2 = Convert.ToDateTime(dt2.Rows[0]["交货日期"].ToString());
-            string d2 = date2.ToString("yyyy-MM-dd");
-            for (i = 0; i < dt2.Rows.Count; i++)
-            {
-                workbook = application.Workbooks._Open(sfdg.FileName, Type.Missing, Type.Missing,
-                Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing,
-                Type.Missing, Type.Missing, Type.Missing);
-                worksheet = (Excel.Worksheet)workbook.Worksheets[1];
+             DateTime date1 = Convert.ToDateTime(dt2.Rows[0]["订货日期"].ToString());
+             string d1 = date1.ToString("yyyy-MM-dd");
+             DateTime date2 = Convert.ToDateTime(dt2.Rows[0]["交货日期"].ToString());
+             string d2 = date2.ToString("yyyy-MM-dd");
+             for (i = 0; i < dt2.Rows.Count; i++)
+             {
+                 workbook = application.Workbooks._Open(sfdg.FileName, Type.Missing, Type.Missing,
+                 Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing,
+                 Type.Missing, Type.Missing, Type.Missing);
+                 worksheet = (Excel.Worksheet)workbook.Worksheets[1];
 
-                application.Visible = false;
-                application.ExtendList = false;
-                application.DisplayAlerts = false;
-                application.AlertBeforeOverwriting = false;
-                if (BillName == "订单")
-                {
-                    worksheet.Cells[3, 2] = "";
-                    worksheet.Cells[3, 5] = "";
-                    worksheet.Cells[3, 9] = "";
-                    worksheet.Cells[4, 2] = "";
-                    worksheet.Cells[6, 1] = "";
-                    worksheet.Cells[6, 2] = "";
-                    worksheet.Cells[6, 3] = "";
-                    worksheet.Cells[6, 4] = "";
-                    worksheet.Cells[6, 5] = "";
-                    worksheet.Cells[6, 6] = "";
-                    worksheet.Cells[6, 7] = "";
-                    worksheet.Cells[6, 6] = "";
-                    worksheet.Cells[6, 9] = "";
-                    worksheet.Cells[6, 10] = "";
+                 application.Visible = false;
+                 application.ExtendList = false;
+                 application.DisplayAlerts = false;
+                 application.AlertBeforeOverwriting = false;
+                 if (BillName == "订单")
+                 {
+                     worksheet.Cells[3, 2] = "";
+                     worksheet.Cells[3, 5] = "";
+                     worksheet.Cells[3, 9] = "";
+                     worksheet.Cells[4, 2] = "";
+                     worksheet.Cells[6, 1] = "";
+                     worksheet.Cells[6, 2] = "";
+                     worksheet.Cells[6, 3] = "";
+                     worksheet.Cells[6, 4] = "";
+                     worksheet.Cells[6, 5] = "";
+                     worksheet.Cells[6, 6] = "";
+                     worksheet.Cells[6, 7] = "";
+                     worksheet.Cells[6, 6] = "";
+                     worksheet.Cells[6, 9] = "";
+                     worksheet.Cells[6, 10] = "";
 
-                    worksheet.Cells[3, 2] = dt2.Rows[i]["订单号"].ToString();
-                    worksheet.Cells[3, 5] = d1;
-                    worksheet.Cells[3, 9] = d2;
-                    worksheet.Cells[4, 2] = dt2.Rows[i]["客户"].ToString();
-                    worksheet.Cells[6, 1] = dt2.Rows[i]["品号"].ToString();
-                    worksheet.Cells[6, 2] = dt2.Rows[i]["品名"].ToString();
-                    worksheet.Cells[6, 3] = dt2.Rows[i]["规格"].ToString();
-                    worksheet.Cells[6, 4] = dt2.Rows[i]["单位"].ToString();
-                    worksheet.Cells[6, 5] = dt2.Rows[i]["订单数量"].ToString();
-                    worksheet.Cells[6, 10] = dt2.Rows[i]["加急否"].ToString();
+                     worksheet.Cells[3, 2] = dt2.Rows[i]["订单号"].ToString();
+                     worksheet.Cells[3, 5] = d1;
+                     worksheet.Cells[3, 9] = d2;
+                     worksheet.Cells[4, 2] = dt2.Rows[i]["客户"].ToString();
+                     worksheet.Cells[6, 1] = dt2.Rows[i]["品号"].ToString();
+                     worksheet.Cells[6, 2] = dt2.Rows[i]["品名"].ToString();
+                     worksheet.Cells[6, 3] = dt2.Rows[i]["规格"].ToString();
+                     worksheet.Cells[6, 4] = dt2.Rows[i]["单位"].ToString();
+                     worksheet.Cells[6, 5] = dt2.Rows[i]["订单数量"].ToString();
+                     worksheet.Cells[6, 10] = dt2.Rows[i]["加急否"].ToString();
 
-                    workbook.Save();
-                    csharpExcelPrint(sfdg.FileName);
-                }
-                else
-                {
-                    if (j == 0)
-                    {
-                        worksheet.Cells[2, 2] = "";
-                        worksheet.Cells[2, 5] = "";
-                        worksheet.Cells[2, 9] = "";
-                        worksheet.Cells[3, 2] = "";
-                        worksheet.Cells[3, 9] = "";
-                        worksheet.Cells[4, 2] = "";
-                        for (int s1 = 6; s1 <= 10; s1++)
-                        {
+                     workbook.Save();
+                     csharpExcelPrint(sfdg.FileName);
+                 }
+                 else
+                 {
+                     if (j == 0)
+                     {
+                         worksheet.Cells[2, 2] = "";
+                         worksheet.Cells[2, 5] = "";
+                         worksheet.Cells[2, 9] = "";
+                         worksheet.Cells[3, 2] = "";
+                         worksheet.Cells[3, 9] = "";
+                         worksheet.Cells[4, 2] = "";
+                         for (int s1 = 6; s1 <= 10; s1++)
+                         {
 
-                            worksheet.Cells[s1, 1] = "";
-                            worksheet.Cells[s1, 2] = "";
-                            worksheet.Cells[s1, 3] = "";
-                            worksheet.Cells[s1, 4] = "";
-                            worksheet.Cells[s1, 5] = "";
-                            worksheet.Cells[s1, 6] = "";
-                            worksheet.Cells[s1, 7] = "";
-                            worksheet.Cells[s1, 8] = "";
-                            worksheet.Cells[s1, 9] = "";
-                            worksheet.Cells[s1, 10] = "";
+                             worksheet.Cells[s1, 1] = "";
+                             worksheet.Cells[s1, 2] = "";
+                             worksheet.Cells[s1, 3] = "";
+                             worksheet.Cells[s1, 4] = "";
+                             worksheet.Cells[s1, 5] = "";
+                             worksheet.Cells[s1, 6] = "";
+                             worksheet.Cells[s1, 7] = "";
+                             worksheet.Cells[s1, 8] = "";
+                             worksheet.Cells[s1, 9] = "";
+                             worksheet.Cells[s1, 10] = "";
 
-                        }
+                         }
 
-                    }
-                    worksheet.Cells[2, 2] = dt2.Rows[i]["销货单号"].ToString();
-                    worksheet.Cells[2, 5] = d1;
-                    worksheet.Cells[2, 9] = d2;
-                    worksheet.Cells[3, 2] = dt2.Rows[i]["客户"].ToString();
-                    worksheet.Cells[3, 9] = dt2.Rows[i]["电话"].ToString();
-                    worksheet.Cells[4, 2] = dt2.Rows[i]["地址"].ToString();
-                    worksheet.Cells[6, 1] = dt2.Rows[i]["品号"].ToString();
-                    worksheet.Cells[6, 2] = dt2.Rows[i]["品名"].ToString();
-                    worksheet.Cells[6, 3] = dt2.Rows[i]["规格"].ToString();
-                    worksheet.Cells[6, 5] = dt2.Rows[i]["单位"].ToString();
-                    worksheet.Cells[6, 7] = dt2.Rows[i]["销货数量"].ToString();
-                    worksheet.Cells[6, 9] = dt2.Rows[i]["加急否"].ToString();
-                    if (i + 1 < dt2.Rows.Count)
-                    {
-                        worksheet.Cells[7, 1] = dt2.Rows[i + 1]["品号"].ToString();
-                        worksheet.Cells[7, 2] = dt2.Rows[i + 1]["品名"].ToString();
-                        worksheet.Cells[7, 3] = dt2.Rows[i + 1]["规格"].ToString();
-                        worksheet.Cells[7, 5] = dt2.Rows[i + 1]["单位"].ToString();
-                        worksheet.Cells[7, 7] = dt2.Rows[i + 1]["销货数量"].ToString();
-                        worksheet.Cells[7, 9] = dt2.Rows[i + 1]["加急否"].ToString();
-                    }
-                    if (i + 2 < dt2.Rows.Count)
-                    {
-                        worksheet.Cells[8, 1] = dt2.Rows[i + 2]["品号"].ToString();
-                        worksheet.Cells[8, 2] = dt2.Rows[i + 2]["品名"].ToString();
-                        worksheet.Cells[8, 3] = dt2.Rows[i + 2]["规格"].ToString();
-                        worksheet.Cells[8, 5] = dt2.Rows[i + 2]["单位"].ToString();
-                        worksheet.Cells[8, 7] = dt2.Rows[i + 2]["销货数量"].ToString();
-                        worksheet.Cells[8, 9] = dt2.Rows[i + 2]["加急否"].ToString();
-                    }
-                    if (i + 3 < dt2.Rows.Count)
-                    {
-                        worksheet.Cells[9, 1] = dt2.Rows[i + 3]["品号"].ToString();
-                        worksheet.Cells[9, 2] = dt2.Rows[i + 3]["品名"].ToString();
-                        worksheet.Cells[9, 3] = dt2.Rows[i + 3]["规格"].ToString();
-                        worksheet.Cells[9, 5] = dt2.Rows[i + 3]["单位"].ToString();
-                        worksheet.Cells[9, 7] = dt2.Rows[i + 3]["销货数量"].ToString();
-                        worksheet.Cells[9, 9] = dt2.Rows[i + 3]["加急否"].ToString();
-                    }
-                    if (i + 4 < dt2.Rows.Count)
-                    {
-                        worksheet.Cells[10, 1] = dt2.Rows[i + 4]["品号"].ToString();
-                        worksheet.Cells[10, 2] = dt2.Rows[i + 4]["品名"].ToString();
-                        worksheet.Cells[10, 3] = dt2.Rows[i + 4]["规格"].ToString();
-                        worksheet.Cells[10, 5] = dt2.Rows[i + 4]["单位"].ToString();
-                        worksheet.Cells[10, 7] = dt2.Rows[i + 4]["销货数量"].ToString();
-                        worksheet.Cells[10, 9] = dt2.Rows[i + 4]["加急否"].ToString();
-                    }
+                     }
+                     worksheet.Cells[2, 2] = dt2.Rows[i]["销货单号"].ToString();
+                     worksheet.Cells[2, 5] = d1;
+                     worksheet.Cells[2, 9] = d2;
+                     worksheet.Cells[3, 2] = dt2.Rows[i]["客户"].ToString();
+                     worksheet.Cells[3, 9] = dt2.Rows[i]["电话"].ToString();
+                     worksheet.Cells[4, 2] = dt2.Rows[i]["地址"].ToString();
+                     worksheet.Cells[6, 1] = dt2.Rows[i]["品号"].ToString();
+                     worksheet.Cells[6, 2] = dt2.Rows[i]["品名"].ToString();
+                     worksheet.Cells[6, 3] = dt2.Rows[i]["规格"].ToString();
+                     worksheet.Cells[6, 5] = dt2.Rows[i]["单位"].ToString();
+                     worksheet.Cells[6, 7] = dt2.Rows[i]["销货数量"].ToString();
+                     worksheet.Cells[6, 9] = dt2.Rows[i]["加急否"].ToString();
+                     if (i + 1 < dt2.Rows.Count)
+                     {
+                         worksheet.Cells[7, 1] = dt2.Rows[i + 1]["品号"].ToString();
+                         worksheet.Cells[7, 2] = dt2.Rows[i + 1]["品名"].ToString();
+                         worksheet.Cells[7, 3] = dt2.Rows[i + 1]["规格"].ToString();
+                         worksheet.Cells[7, 5] = dt2.Rows[i + 1]["单位"].ToString();
+                         worksheet.Cells[7, 7] = dt2.Rows[i + 1]["销货数量"].ToString();
+                         worksheet.Cells[7, 9] = dt2.Rows[i + 1]["加急否"].ToString();
+                     }
+                     if (i + 2 < dt2.Rows.Count)
+                     {
+                         worksheet.Cells[8, 1] = dt2.Rows[i + 2]["品号"].ToString();
+                         worksheet.Cells[8, 2] = dt2.Rows[i + 2]["品名"].ToString();
+                         worksheet.Cells[8, 3] = dt2.Rows[i + 2]["规格"].ToString();
+                         worksheet.Cells[8, 5] = dt2.Rows[i + 2]["单位"].ToString();
+                         worksheet.Cells[8, 7] = dt2.Rows[i + 2]["销货数量"].ToString();
+                         worksheet.Cells[8, 9] = dt2.Rows[i + 2]["加急否"].ToString();
+                     }
+                     if (i + 3 < dt2.Rows.Count)
+                     {
+                         worksheet.Cells[9, 1] = dt2.Rows[i + 3]["品号"].ToString();
+                         worksheet.Cells[9, 2] = dt2.Rows[i + 3]["品名"].ToString();
+                         worksheet.Cells[9, 3] = dt2.Rows[i + 3]["规格"].ToString();
+                         worksheet.Cells[9, 5] = dt2.Rows[i + 3]["单位"].ToString();
+                         worksheet.Cells[9, 7] = dt2.Rows[i + 3]["销货数量"].ToString();
+                         worksheet.Cells[9, 9] = dt2.Rows[i + 3]["加急否"].ToString();
+                     }
+                     if (i + 4 < dt2.Rows.Count)
+                     {
+                         worksheet.Cells[10, 1] = dt2.Rows[i + 4]["品号"].ToString();
+                         worksheet.Cells[10, 2] = dt2.Rows[i + 4]["品名"].ToString();
+                         worksheet.Cells[10, 3] = dt2.Rows[i + 4]["规格"].ToString();
+                         worksheet.Cells[10, 5] = dt2.Rows[i + 4]["单位"].ToString();
+                         worksheet.Cells[10, 7] = dt2.Rows[i + 4]["销货数量"].ToString();
+                         worksheet.Cells[10, 9] = dt2.Rows[i + 4]["加急否"].ToString();
+                     }
 
-                    workbook.Save();
-                    csharpExcelPrint(sfdg.FileName);
-                    i = i + 4;
+                     workbook.Save();
+                     csharpExcelPrint(sfdg.FileName);
+                     i = i + 4;
 
-                }
-            }
-            application.Quit();
-            worksheet = null;
-            workbook = null;
-            application = null;
-            GC.Collect();
+                 }
+             }
+             application.Quit();
+             worksheet = null;
+             workbook = null;
+             application = null;
+             GC.Collect();*/
 
         }
         #endregion
         #region csharpExcelPrint
-        public  void csharpExcelPrint(string path)
+        public void csharpExcelPrint(string path)
         {
             System.Diagnostics.Process p = new System.Diagnostics.Process();
             p.StartInfo.CreateNoWindow = true;
@@ -1727,6 +2079,240 @@ WHERE A.WAREID='" + wareid + "' AND A.COID='" + coid + "' GROUP BY A.WAREID,A.CO
         }
         #endregion
 
+        #region JuageIfAllowDeleteCAR_EMID
+        public bool JuageIfAllowDeleteCAR_EMID(string EMID)
+        {
+            bool b = false;
+            if (this.exists("SELECT * FROM AUDIT WHERE MAKERID='" + EMID + "' OR HandlerID='" + EMID + "'"))
+            {
+                b = true;
+                ErrowInfo = "该工号已经在年审信息中使用了，不允许删除！";
+
+            }
+            else if (this.exists("SELECT * FROM  CarInfo  WHERE MAKERID='" + EMID + "' OR DriverID='" + EMID + "'"))
+            {
+                b = true;
+                ErrowInfo = "该工号已经在车辆信息中使用了，不允许删除！";
+
+            }
+            else if (this.exists("SELECT * FROM  COMPANYINFO_MST WHERE MAKERID='" + EMID + "'"))
+            {
+                b = true;
+                ErrowInfo = "该工号已经在公司信息中使用了，不允许删除！";
+
+            }
+            else if (this.exists("SELECT * FROM  COMPANYINFO_DET WHERE MAKERID='" + EMID + "'"))
+            {
+                b = true;
+                ErrowInfo = "该工号已经在公司信息中使用了，不允许删除！";
+
+            }
+            else if (this.exists("SELECT * FROM  CUSTOMERINFO_MST WHERE MAKERID='" + EMID + "'"))
+            {
+                b = true;
+                ErrowInfo = "该工号已经在客户信息中使用了，不允许删除！";
+
+            }
+            else if (this.exists("SELECT * FROM  CUSTOMERINFO_DET WHERE MAKERID='" + EMID + "'"))
+            {
+                b = true;
+                ErrowInfo = "该工号已经在客户信息中使用了，不允许删除！";
+
+            }
+
+            else if (this.exists("SELECT * FROM  GAS WHERE MAKERID='" + EMID + "' OR HandlerID='" + EMID + "'"))
+            {
+                b = true;
+                ErrowInfo = "该工号已经在加油信息中使用了，不允许删除！";
+
+            }
+            else if (this.exists("SELECT * FROM  GasCardAddFunds  WHERE MAKERID='" + EMID + "' OR HandlerID='" + EMID + "'"))
+            {
+                b = true;
+                ErrowInfo = "该工号已经在加油卡冲值信息中使用了，不允许删除！";
+
+            }
+            else if (this.exists("SELECT * FROM  GasCardInfo WHERE MAKERID='" + EMID + "' OR HandlerID='" + EMID + "'"))
+            {
+                b = true;
+                ErrowInfo = "该工号已经在加油卡信息中使用了，不允许删除！";
+
+            }
+            else if (this.exists("SELECT * FROM  GODE WHERE MAKERID='" + EMID + "'"))
+            {
+                b = true;
+                ErrowInfo = "该工号已经在交易数量表信息中使用了，不允许删除！";
+
+            }
+            else if (this.exists("SELECT * FROM  INSURE  WHERE MAKERID='" + EMID + "' OR HandlerID='" + EMID + "'"))
+            {
+                b = true;
+                ErrowInfo = "该工号已经在保险费用信息中使用了，不允许删除！";
+
+            }
+            else if (this.exists("SELECT * FROM  OTHER WHERE MAKERID='" + EMID + "' OR HandlerID='" + EMID + "'"))
+            {
+                b = true;
+                ErrowInfo = "该工号已经在其它费用信息中使用了，不允许删除！";
+
+            }
+            else if (this.exists("SELECT * FROM  ReceivingAndDelivery WHERE MAKERID='" + EMID + "'"))
+            {
+                b = true;
+                ErrowInfo = "该工号已经在收送地址信息中使用了，不允许删除！";
+
+            }
+            else if (this.exists("SELECT * FROM  REPAIR WHERE MAKERID='" + EMID + "' OR HandlerID='" + EMID + "'"))
+            {
+                b = true;
+                ErrowInfo = "该工号已经在维修费用信息中使用了，不允许删除！";
+
+            }
+            else if (this.exists("SELECT * FROM  RightList WHERE MAKERID='" + EMID + "'"))
+            {
+                b = true;
+                ErrowInfo = "该工号已经在权限清单信息中使用了，不允许删除！";
+
+            }
+            else if (this.exists("SELECT * FROM  TOLL  WHERE MAKERID='" + EMID + "' OR HandlerID='" + EMID + "'"))
+            {
+                b = true;
+                ErrowInfo = "该工号已经在路费信息中使用了，不允许删除！";
+
+            }
+            else if (this.exists("SELECT * FROM  TollCardAddFunds  WHERE MAKERID='" + EMID + "' OR HandlerID='" + EMID + "'"))
+            {
+                b = true;
+                ErrowInfo = "该工号已经在路卡冲值信息中使用了，不允许删除！";
+
+            }
+            else if (this.exists("SELECT * FROM  TollCardInfo  WHERE MAKERID='" + EMID + "' OR HandlerID='" + EMID + "'"))
+            {
+                b = true;
+                ErrowInfo = "该工号已经在路卡信息中使用了，不允许删除！";
+
+            }
+
+            else if (this.exists(@"SELECT * FROM  UCAPPLY_MST  WHERE MAKERID='" + EMID + "' OR ApplicantID='" + EMID +
+                "' OR USEPersonID='" + EMID + "' OR APPROVERID='" + EMID + "' OR DISPATCHERID='" + EMID +
+                "'OR DRIVERID='" + EMID + "'OR DEPARTURE_SECURITYID='" + EMID + "'OR RETURN_SECURITYID='" + EMID + "' "))
+            {
+                b = true;
+                ErrowInfo = "该工号已经在用车申请主表信息中使用了，不允许删除！";
+
+            }
+            else if (this.exists("SELECT * FROM  UPKEEP  WHERE MAKERID='" + EMID + "' OR HandlerID='" + EMID + "'"))
+            {
+                b = true;
+                ErrowInfo = "该工号已经在保养费用信息中使用了，不允许删除！";
+
+            }
+            else if (this.exists("SELECT * FROM  UserInfo  WHERE MAKERID='" + EMID + "'"))
+            {
+                b = true;
+                ErrowInfo = "该工号已经在用户信息中使用了，不允许删除！";
+
+            }
+            else if (this.exists("SELECT * FROM  WASH  WHERE MAKERID='" + EMID + "' OR HandlerID='" + EMID + "'"))
+            {
+                b = true;
+                ErrowInfo = "该工号已经在洗车费用信息中使用了，不允许删除！";
+
+            }
+            return b;
+        }
+        #endregion
+        #region JuageIfAllowDeleteCAR_CAID
+        public bool JuageIfAllowDeleteCAR_CAID(string CAID)
+        {
+            bool b = false;
+            if (this.exists("SELECT * FROM AUDIT WHERE CAID='" + CAID + "' "))
+            {
+                b = true;
+                ErrowInfo = "该车牌号码已经在年审信息中使用了，不允许删除！";
+
+            }
+            else if (this.exists("SELECT * FROM  GAS WHERE CAID='" + CAID + "' "))
+            {
+                b = true;
+                ErrowInfo = "该车牌号码已经在加油信息中使用了，不允许删除！";
+
+            }
+            else if (this.exists("SELECT * FROM  GasCardAddFunds  WHERE CAID='" + CAID + "' "))
+            {
+                b = true;
+                ErrowInfo = "该车牌号码已经在加油卡冲值信息中使用了，不允许删除！";
+
+            }
+            else if (this.exists("SELECT * FROM  GasCardInfo WHERE CAID='" + CAID + "' "))
+            {
+                b = true;
+                ErrowInfo = "该车牌号码已经在加油卡信息中使用了，不允许删除！";
+
+            }
+            else if (this.exists("SELECT * FROM  GODE WHERE CAID='" + CAID + "'"))
+            {
+                b = true;
+                ErrowInfo = "该车牌号码已经在交易数量表信息中使用了，不允许删除！";
+
+            }
+            else if (this.exists("SELECT * FROM  INSURE  WHERE CAID='" + CAID + "' "))
+            {
+                b = true;
+                ErrowInfo = "该车牌号码已经在保险费用信息中使用了，不允许删除！";
+
+            }
+            else if (this.exists("SELECT * FROM  OTHER WHERE CAID='" + CAID + "' "))
+            {
+                b = true;
+                ErrowInfo = "该车牌号码已经在其它费用信息中使用了，不允许删除！";
+
+            }
+
+            else if (this.exists("SELECT * FROM  REPAIR WHERE CAID='" + CAID + "' "))
+            {
+                b = true;
+                ErrowInfo = "该车牌号码已经在维修费用信息中使用了，不允许删除！";
+
+            }
+
+            else if (this.exists("SELECT * FROM  TOLL  WHERE CAID='" + CAID + "' "))
+            {
+                b = true;
+                ErrowInfo = "该车牌号码已经在路费信息中使用了，不允许删除！";
+
+            }
+
+            else if (this.exists("SELECT * FROM  TollCardInfo  WHERE CAID='" + CAID + "' "))
+            {
+                b = true;
+                ErrowInfo = "该车牌号码已经在路卡信息中使用了，不允许删除！";
+
+            }
+
+            else if (this.exists(@"SELECT * FROM  UCAPPLY_MST  WHERE CAID='" + CAID + "' "))
+            {
+                b = true;
+                ErrowInfo = "该车牌号码已经在用车申请主表信息中使用了，不允许删除！";
+
+            }
+            else if (this.exists("SELECT * FROM  UPKEEP  WHERE CAID='" + CAID + "' "))
+            {
+                b = true;
+                ErrowInfo = "该车牌号码已经在保养费用信息中使用了，不允许删除！";
+
+            }
+
+            else if (this.exists("SELECT * FROM  WASH  WHERE CAID='" + CAID + "' "))
+            {
+                b = true;
+                ErrowInfo = "该车牌号码已经在洗车费用信息中使用了，不允许删除！";
+
+            }
+            return b;
+        }
+        #endregion
+
         #region JuageIfAllowReductionReconcileCAR_APPROVE
         public bool JuageIfAllowReductionReconcileCAR_APPROVE(string UCID)
         {
@@ -1793,7 +2379,7 @@ WHERE A.WAREID='" + wareid + "' AND A.COID='" + coid + "' GROUP BY A.WAREID,A.CO
         public bool checkUCID(string UCID)
         {
             bool ju = true;
-            if (!this.exists("SELECT * FROM UCAPPLY_MST WHERE UCID='" +UCID  + "' AND UCAPPLY_STATUS='APPROVE'"))
+            if (!this.exists("SELECT * FROM UCAPPLY_MST WHERE UCID='" + UCID + "' AND UCAPPLY_STATUS='APPROVE'"))
             {
                 ju = false;
                 ErrowInfo = "用车单号为空或不存在于系统中或未审核！";
@@ -1945,10 +2531,94 @@ ORDER BY A.CAID
         #endregion
 
         #region toexcel
+        public void dgvtoExcel_for_epplus(DataGridView dataGridView1, string str1)
+        {
+            SaveFileDialog sfdg = new SaveFileDialog();
+             sfdg.DefaultExt = "xlsx";
+             sfdg.Filter = "Excel(*.xlsx)|*.xlsx|Excel 97-2003(*.xls)|*.xls";
+             sfdg.FileName = str1;
+             sfdg.Title = "导出到EXCEL";
+
+             int n = dataGridView1.RowCount;
+             int w = dataGridView1.ColumnCount;
+
+             if (sfdg.ShowDialog() == DialogResult.OK)
+             {
+                 try
+                 {
+                     using (ExcelPackage excelPackage = new ExcelPackage())
+                     {
+                         ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("Sheet1");
+
+                         // 设置表头
+                         for (int j = 0; j < dataGridView1.ColumnCount; j++)
+                         {
+                             worksheet.Cells[1, j + 1].Value = dataGridView1.Columns[j].HeaderText;
+                             worksheet.Cells[1, j + 1].Style.Font.Bold = true;
+                             worksheet.Cells[1, j + 1].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                         }
+
+                         // 填充数据
+                         for (int i = 0; i < dataGridView1.RowCount; i++)
+                         {
+                             for (int x = 0; x < dataGridView1.ColumnCount; x++)
+                             {
+                                 if (dataGridView1[x, i].Value != null)
+                                 {
+                                     var cellValue = dataGridView1[x, i].Value;
+
+                                     // 处理字符串类型，防止科学计数法等问题
+                                     if (dataGridView1[x, i].ValueType == typeof(string) ||
+                                         dataGridView1[x, i].ValueType == typeof(String))
+                                     {
+                                         worksheet.Cells[i + 2, x + 1].Value = cellValue.ToString();
+                                         worksheet.Cells[i + 2, x + 1].Style.Numberformat.Format = "@"; // 文本格式
+                                     }
+                                     else
+                                     {
+                                         worksheet.Cells[i + 2, x + 1].Value = cellValue;
+                                     }
+                                 }
+                             }
+
+                             // 显示进度（可选）
+                             if (i % 100 == 0)
+                             {
+                                 Application.DoEvents();
+                             }
+                         }
+
+                         // 设置边框
+                         using (ExcelRange range = worksheet.Cells[1, 1, n + 1, w])
+                         {
+                             range.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                             range.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                             range.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                             range.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                         }
+
+                         // 自动调整列宽
+                         worksheet.Cells[1, 1, n + 1, w].AutoFitColumns();
+
+                         // 保存文件
+                         FileInfo excelFile = new FileInfo(sfdg.FileName);
+                         excelPackage.SaveAs(excelFile);
+                     }
+
+                     MessageBox.Show("成功导出！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                 }
+                 catch (Exception ex)
+                 {
+                     MessageBox.Show("导出失败：" + ex.Message, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                 }
+             }
+        }
+        #endregion
+        #region toexcel
         public void dgvtoExcel(DataGridView dataGridView1, string str1)
         {
 
-            SaveFileDialog sfdg = new SaveFileDialog();
+            /*SaveFileDialog sfdg = new SaveFileDialog();
             sfdg.DefaultExt = "xls";
             sfdg.Filter = "Excel(*.xls)|*.xls";
             //sfdg.RestoreDirectory = true;
@@ -2015,12 +2685,12 @@ ORDER BY A.CAID
                     GC.Collect();
                 }
 
-            }
+            }*/
         }
 
         #endregion
 
-        public bool CheckKeyInValueIfNoExistsOrEmpty(string TABLENAME,string COLUMN_NAME,string COLUMN_VALUE,string REMARK)
+        public bool CheckKeyInValueIfNoExistsOrEmpty(string TABLENAME, string COLUMN_NAME, string COLUMN_VALUE, string REMARK)
         {
             bool ju = false;
             if (COLUMN_VALUE == "")
@@ -2032,7 +2702,7 @@ ORDER BY A.CAID
             else if (!this.exists("SELECT *  FROM " + TABLENAME + " WHERE " + COLUMN_NAME + "='" + COLUMN_VALUE + "'"))
             {
                 ju = true;
-                MessageBox.Show(REMARK+" "+COLUMN_VALUE+ "不存在于系统中！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(REMARK + " " + COLUMN_VALUE + "不存在于系统中！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             }
             return ju;
@@ -2069,10 +2739,10 @@ ORDER BY A.CAID
                 MessageBox.Show(REMARK + "不为数字！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             }
-      
+
             return ju;
         }
-        public void  dgvTAB_MOVE(DataGridView dataGridView1)
+        public void dgvTAB_MOVE(DataGridView dataGridView1)
         {
             int currentcolumnindex = dataGridView1.CurrentCell.ColumnIndex;
             int currentrowindex = dataGridView1.CurrentCell.RowIndex;
@@ -2089,26 +2759,14 @@ ORDER BY A.CAID
             }
 
         }
-        #region  GET_IFExecutionSUCCESS_HINT_INFO
-        public string GET_IFExecutionSUCCESS_HINT_INFO(bool SET_IFExecutionSUCCESS)
-        {
-            string v = "";
-            if (SET_IFExecutionSUCCESS == true)
-            {
-
-                v = "已保存成功!";
-            }
-            return v;
-        }
-        #endregion
         #region LOWERCASE_TO_CAPITAL
-        public string  LOWERCASE_TO_CAPITAL(string v)
+        public string LOWERCASE_TO_CAPITAL(string v)
         {
             int i;
             string v1 = "";
             if (v == "")
             {
-            //MessageBox.Show("不能为空！", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                //MessageBox.Show("不能为空！", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             else
             {
@@ -2151,7 +2809,7 @@ ORDER BY A.CAID
                     }
                     else
                     {
-                     
+
                     }
 
                 }
@@ -2160,7 +2818,7 @@ ORDER BY A.CAID
         }
         #endregion
         #region GET_NOEXISTS_EMPTY_ROW_DT
-        public DataTable  GET_NOEXISTS_EMPTY_ROW_DT(DataTable  dt,string Sort,string RowFilter)
+        public DataTable GET_NOEXISTS_EMPTY_ROW_DT(DataTable dt, string Sort, string RowFilter)
         {
             DataView dv = new DataView(dt);
             dv.RowFilter = RowFilter;
@@ -2182,14 +2840,15 @@ ORDER BY A.CAID
         #region GET_NOEMPTY_ROW_COURSE_DT
         public DataTable GET_NOEMPTY_ROW_COURSE_DT(DataTable dt)
         {
-            dt=this.GET_NOEXISTS_EMPTY_ROW_DT(dt, "", "会计科目 IS NOT NULL ");
+            dt = this.GET_NOEXISTS_EMPTY_ROW_DT(dt, "", "科目 IS NOT NULL ");
             return dt;
         }
         #endregion
+
         #region REMOVE_NAME
         public string REMOVE_NAME(string HAVE_NAME_STRING)
         {
-            string v= "";
+            string v = "";
             if (HAVE_NAME_STRING.Length > 0)
             {
 
@@ -2198,7 +2857,7 @@ ORDER BY A.CAID
                     int p = Convert.ToInt32(HAVE_NAME_STRING[i]);
                     if (p != 32)
                     {
-                        v = v+ HAVE_NAME_STRING[i];
+                        v = v + HAVE_NAME_STRING[i];
                     }
                     else
                     {
@@ -2211,11 +2870,85 @@ ORDER BY A.CAID
         }
         #endregion
 
+        #region JUAGE_IF_EXISTS_ANYONE_CHAR
+        public bool JUAGE_IF_EXISTS_ANYONE_CHAR(string JUAGE_STRING, char JUAGE_CHAR)
+        {
+            bool b = false;
+            if (JUAGE_STRING.Length > 0)
+            {
+
+                for (int i = 0; i < JUAGE_STRING.Length; i++)
+                {
+                    int p = Convert.ToInt32(JUAGE_STRING[i]);
+                    int q = Convert.ToInt32(JUAGE_CHAR);
+                    if (p == q)
+                    {
+                        b = true;
+                        break;
+                    }
+
+
+                }
+            }
+
+            return b;
+        }
+        #endregion
+
+
+        #region JUAGE_IF_EXISTS_ANYONE_CHAR
+        public bool JUAGE_IF_EXISTS_ANYONE_CHAR(string JUAGE_STRING, int JUAGE_CHAR)
+        {
+            bool b = false;
+            if (JUAGE_STRING.Length > 0)
+            {
+
+                for (int i = 0; i < JUAGE_STRING.Length; i++)
+                {
+                    int p = Convert.ToInt32(JUAGE_STRING[i]);
+                    int q = Convert.ToInt32(JUAGE_CHAR);
+                    if (p == q)
+                    {
+                        b = true;
+                        break;
+                    }
+
+
+                }
+            }
+
+            return b;
+        }
+        #endregion
+        #region FROM_RIGHT_UNTIL_CHAR
+        public string FROM_RIGHT_UNTIL_CHAR(string STRING_VALUE, int CHAR_VALUE)
+        {
+            string v = "";
+            if (STRING_VALUE.Length > 0)
+            {
+
+                for (int i = STRING_VALUE.Length - 1; i > 0; i--)
+                {
+                    int p = Convert.ToInt32(STRING_VALUE[i]);
+                    if (p != CHAR_VALUE)
+                    {
+                        v = STRING_VALUE[i] + v;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+
+            return v;
+        }
+        #endregion
         #region GET_NO_ZERO_MONTH
         public string GET_NO_ZERO_MONTH(string MM)
         {
             string v = "";
-            if (MM.Length ==2)
+            if (MM.Length == 2)
             {
                 if (MM.Substring(0, 1) == "0")
                 {
@@ -2229,6 +2962,7 @@ ORDER BY A.CAID
             return v;
         }
         #endregion
+
         #region RETURN_ADD_EMPTY_COLUMN
         public DataTable RETURN_ADD_EMPTY_COLUMN(string TABLE_NAME, string COLUMN_NAME)
         {

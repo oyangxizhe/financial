@@ -113,6 +113,7 @@ A.INITIAL_CREDITED_ORIGINALAMOUNT AS 期初贷方
 SELECT 
 A.VOID AS 凭证号,
 A.SN AS 项次,
+B.VOUCHER_DATE 凭证日期,
 A.Abstract AS 摘要,
 C.ACCODE AS 科目代码,
 C.ACNAME AS 科目名称,
@@ -606,7 +607,7 @@ SELECT B.CYCODE FROM ACCOUNTANT_COURSE A LEFT JOIN CURRENCY_MST B ON A.CYID=B.CY
             sqlcom.Parameters.Add("@VOKEY", SqlDbType.VarChar, 20).Value = KEY;
             sqlcom.Parameters.Add("@VOID", SqlDbType.VarChar, 20).Value = IDVALUE;
             sqlcom.Parameters.Add("@SN", SqlDbType.VarChar, 20).Value = SN;
-            sqlcom.Parameters.Add("@ABSTRACT", SqlDbType.VarChar, 20).Value = ABSTRACT;
+            sqlcom.Parameters.Add("@ABSTRACT", SqlDbType.VarChar, 100).Value = ABSTRACT;
             sqlcom.Parameters.Add("@ACID", SqlDbType.VarChar, 20).Value = bc.getOnlyString(@"SELECT ACID FROM ACCOUNTANT_COURSE WHERE ACCODE='" + ACCODE
                 + "' ");
             sqlcom.Parameters.Add("@UNITPRICE", SqlDbType.VarChar, 20).Value = UNITPRICE;

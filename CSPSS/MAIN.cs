@@ -57,48 +57,48 @@ namespace CSPSS
              //listView1 .BackgroundImage  = Image.FromFile(System .IO.Path.GetFullPath("Image/1.png"));
             groupBox1.Height = 675;
 
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/1.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/2.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/3.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/4.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/5.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/6.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/7.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/8.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/9.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/10.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/11.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/12.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/13.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/14.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/15.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/16.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/17.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/18.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/19.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/20.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/21.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/22.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/23.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/24.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/25.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/26.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/27.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/28.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/29.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/30.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/31.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/32.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/33.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/34.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/35.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/36.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/37.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/38.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/39.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/40.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/41.png")));
-            imageList1.Images.Add(Image.FromFile(System.IO.Path.GetFullPath("Image/42.png")));
+            imageList1.Images.Add(CSPSS.Resource1._1);
+            imageList1.Images.Add(CSPSS.Resource1._2);
+            imageList1.Images.Add(CSPSS.Resource1._3);
+            imageList1.Images.Add(CSPSS.Resource1._4);
+            imageList1.Images.Add(CSPSS.Resource1._5);
+            imageList1.Images.Add(CSPSS.Resource1._6);
+            imageList1.Images.Add(CSPSS.Resource1._7);
+            imageList1.Images.Add(CSPSS.Resource1._8);
+            imageList1.Images.Add(CSPSS.Resource1._9);
+            imageList1.Images.Add(CSPSS.Resource1._10);
+            imageList1.Images.Add(CSPSS.Resource1._11);
+            imageList1.Images.Add(CSPSS.Resource1._12);
+            imageList1.Images.Add(CSPSS.Resource1._13);
+            imageList1.Images.Add(CSPSS.Resource1._14);
+            imageList1.Images.Add(CSPSS.Resource1._15);
+            imageList1.Images.Add(CSPSS.Resource1._16);
+            imageList1.Images.Add(CSPSS.Resource1._17);
+            imageList1.Images.Add(CSPSS.Resource1._18);
+            imageList1.Images.Add(CSPSS.Resource1._19);
+            imageList1.Images.Add(CSPSS.Resource1._20);
+            imageList1.Images.Add(CSPSS.Resource1._21);
+            imageList1.Images.Add(CSPSS.Resource1._22);
+            imageList1.Images.Add(CSPSS.Resource1._23);
+            imageList1.Images.Add(CSPSS.Resource1._24);
+            imageList1.Images.Add(CSPSS.Resource1._25);
+            imageList1.Images.Add(CSPSS.Resource1._26);
+            imageList1.Images.Add(CSPSS.Resource1._27);
+            imageList1.Images.Add(CSPSS.Resource1._28);
+            imageList1.Images.Add(CSPSS.Resource1._29);
+            imageList1.Images.Add(CSPSS.Resource1._30);
+            imageList1.Images.Add(CSPSS.Resource1._31);
+            imageList1.Images.Add(CSPSS.Resource1._32);
+            imageList1.Images.Add(CSPSS.Resource1._33);
+            imageList1.Images.Add(CSPSS.Resource1._34);
+            imageList1.Images.Add(CSPSS.Resource1._35);
+            imageList1.Images.Add(CSPSS.Resource1._36);
+            imageList1.Images.Add(CSPSS.Resource1._37);
+            imageList1.Images.Add(CSPSS.Resource1._38);
+            imageList1.Images.Add(CSPSS.Resource1._39);
+            imageList1.Images.Add(CSPSS.Resource1._40);
+            imageList1.Images.Add(CSPSS.Resource1._41);
+            imageList1.Images.Add(CSPSS.Resource1._42);
 
             imageList1.ColorDepth = ColorDepth.Depth32Bit;/*防止图片失真*/
             listView1.View = View.SmallIcon;
@@ -235,13 +235,7 @@ namespace CSPSS
                
 
              }
-             else if (v1 == "结算方式维护")
-             {
-                 CSPSS.BASE_INFO.PAYMENT_METHOD FRM = new CSPSS.BASE_INFO.PAYMENT_METHOD();
-                 FRM.IDO = cpayment_method.GETID();
-                 FRM.ShowDialog();
-
-             }
+            
              else if (v1 == "员工信息维护")
              {
                  CSPSS.BASE_INFO.EMPLOYEE_INFO FRM = new CSPSS.BASE_INFO.EMPLOYEE_INFO();
@@ -439,9 +433,9 @@ namespace CSPSS
 
                      }
                  }
-                 catch (Exception)
+                 catch (Exception ex)
                  {
-
+                     MessageBox.Show(ex.Message);
                  }
 
              }

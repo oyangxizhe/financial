@@ -256,6 +256,57 @@ VALUES
             sqlcon.Close();
         }
         #endregion
+        #region SQlcommandE_USER_GROUP_USERD
+        public void SQlcommandE_USER_GROUP_USERD(DataTable dt, string USID, string EMID, string USER_GROUP)
+        {
+            string year = DateTime.Now.ToString("yy");
+            string month = DateTime.Now.ToString("MM");
+            string day = DateTime.Now.ToString("dd");
+            string varDate = DateTime.Now.ToString("yyy/MM/dd HH:mm:ss").Replace("-", "/");
+            basec.getcoms("DELETE RIGHTLIST WHERE USID='" + USID + "'");
+            bc.getcom("DELETE SCOPE_OF_AUTHORIZATION WHERE USID='" + USID + "'");
+            DataTable dt1 = bc.getdt("SELECT * FROM SCOPE_OF_AUTHORIZATION WHERE USID='" + USER_GROUP + "'");
+            if (dt1.Rows.Count > 0)
+            {
+                //MessageBox.Show(dt1.Rows[0]["USID"].ToString() + "," + dt1.Rows[0]["SCOPE"].ToString());
+                bc.getcom(string.Format("INSERT INTO SCOPE_OF_AUTHORIZATION(USID,SCOPE) VALUES ('{0}','{1}')", USID, dt1.Rows[0]["SCOPE"].ToString()));
+            }
+            foreach (DataRow dr in dt.Rows)
+            {
+                SqlConnection sqlcon = bc.getcon();
+                SqlCommand sqlcom = new SqlCommand(setsqlo, sqlcon);
+                sqlcom.Parameters.Add("USID", SqlDbType.VarChar, 20).Value = USID;
+                sqlcom.Parameters.Add("NodeID", SqlDbType.VarChar, 20).Value = dr["NodeID"].ToString();
+                sqlcom.Parameters.Add("NODE_NAME", SqlDbType.VarChar, 20).Value = dr["NODE_NAME"].ToString();
+                sqlcom.Parameters.Add("PARENT_NODEID", SqlDbType.VarChar, 20).Value = dr["PARENT_NODEID"].ToString();
+                sqlcom.Parameters.Add("OPERATE", SqlDbType.VarChar, 20).Value = dr["OPERATE"].ToString();
+                sqlcom.Parameters.Add("SEARCH", SqlDbType.VarChar, 20).Value = dr["SEARCH"].ToString();
+                sqlcom.Parameters.Add("ADD_NEW", SqlDbType.VarChar, 20).Value = dr["ADD_NEW"].ToString();
+                sqlcom.Parameters.Add("EDIT", SqlDbType.VarChar, 20).Value = dr["EDIT"].ToString();
+                sqlcom.Parameters.Add("DEL", SqlDbType.VarChar, 20).Value = dr["DEL"].ToString();
+                sqlcom.Parameters.Add("OFFER_AUDIT", SqlDbType.VarChar, 20).Value = dr["OFFER_AUDIT"].ToString();
+                sqlcom.Parameters.Add("OFFER_DATE_SEARCH", SqlDbType.VarChar, 20).Value = dr["OFFER_DATE_SEARCH"].ToString();
+                sqlcom.Parameters.Add("SAMPLE_AUDIT", SqlDbType.VarChar, 20).Value = dr["SAMPLE_AUDIT"].ToString();
+                sqlcom.Parameters.Add("FILE_UPLOAD", SqlDbType.VarChar, 20).Value = dr["FILE_UPLOAD"].ToString();
+                sqlcom.Parameters.Add("PAPER_AUDIT", SqlDbType.VarChar, 20).Value = dr["PAPER_AUDIT"].ToString();
+                sqlcom.Parameters.Add("ACRYLIC_AUDIT", SqlDbType.VarChar, 20).Value = dr["ACRYLIC_AUDIT"].ToString();
+                sqlcom.Parameters.Add("WOOD_IRON_AUDIT", SqlDbType.VarChar, 20).Value = dr["WOOD_IRON_AUDIT"].ToString();
+                sqlcom.Parameters.Add("PURCHASE_AUDIT", SqlDbType.VarChar, 20).Value = dr["PURCHASE_AUDIT"].ToString();
+                sqlcom.Parameters.Add("EXCEL_ONE", SqlDbType.VarChar, 20).Value = dr["EXCEL_ONE"].ToString();
+                sqlcom.Parameters.Add("EXCEL_TWO", SqlDbType.VarChar, 20).Value = dr["EXCEL_TWO"].ToString();
+                sqlcom.Parameters.Add("EXCEL_THREE", SqlDbType.VarChar, 20).Value = dr["EXCEL_THREE"].ToString();
+                sqlcom.Parameters.Add("EXCEL_FOUR", SqlDbType.VarChar, 20).Value = dr["EXCEL_FOUR"].ToString();
+                sqlcom.Parameters.Add("EXCEL_FIVE", SqlDbType.VarChar, 20).Value = dr["EXCEL_FIVE"].ToString();
+                sqlcom.Parameters.Add("EXCEL_SIX", SqlDbType.VarChar, 20).Value = dr["EXCEL_SIX"].ToString();
+                sqlcom.Parameters.Add("EXCEL_SENVEN", SqlDbType.VarChar, 20).Value = dr["EXCEL_SENVEN"].ToString();
+                sqlcom.Parameters.Add("MAKERID", SqlDbType.VarChar, 20).Value = EMID;
+                sqlcom.Parameters.Add("DATE", SqlDbType.VarChar, 20).Value = varDate;
+                sqlcon.Open();
+                sqlcom.ExecuteNonQuery();
+                sqlcon.Close();
+            }
+        }
+        #endregion
        
     }
 }

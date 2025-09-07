@@ -11,9 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpLoadFile", "UpLoadFile\Up
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateDeliveryDate", "UpdateDeliveryDate\UpdateDeliveryDate.csproj", "{AD7168E4-E68A-4130-82FA-32A2C16F5707}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "服务器文件删除程序", "服务器文件删除程序\服务器文件删除程序.vdproj", "{F78A34A7-91DE-44E8-B8DB-0BD2989FD1ED}"
-EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "财务管理系统", "财务管理系统\财务管理系统.vdproj", "{23BAF297-3AF2-456A-8988-A7B68B824AE1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Webserver", "Webserver\Webserver.csproj", "{66CBE98D-4E19-4C16-9F6E-79F240E4F881}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,10 +39,10 @@ Global
 		{AD7168E4-E68A-4130-82FA-32A2C16F5707}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD7168E4-E68A-4130-82FA-32A2C16F5707}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AD7168E4-E68A-4130-82FA-32A2C16F5707}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F78A34A7-91DE-44E8-B8DB-0BD2989FD1ED}.Debug|Any CPU.ActiveCfg = Debug
-		{F78A34A7-91DE-44E8-B8DB-0BD2989FD1ED}.Release|Any CPU.ActiveCfg = Release
-		{23BAF297-3AF2-456A-8988-A7B68B824AE1}.Debug|Any CPU.ActiveCfg = Debug
-		{23BAF297-3AF2-456A-8988-A7B68B824AE1}.Release|Any CPU.ActiveCfg = Release
+		{66CBE98D-4E19-4C16-9F6E-79F240E4F881}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66CBE98D-4E19-4C16-9F6E-79F240E4F881}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66CBE98D-4E19-4C16-9F6E-79F240E4F881}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66CBE98D-4E19-4C16-9F6E-79F240E4F881}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

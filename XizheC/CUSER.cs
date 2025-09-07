@@ -19,6 +19,7 @@ namespace XizheC
     public class CUSER
     {
         basec bc = new basec();
+        CEDIT_RIGHT cedit_right = new CEDIT_RIGHT();
         #region nature
         private string _ErrowInfo;
         public string ErrowInfo
@@ -33,6 +34,20 @@ namespace XizheC
         {
             set { _USID = value; }
             get { return _USID; }
+
+        }
+        private string _UGID;
+        public string UGID
+        {
+            set { _UGID = value; }
+            get { return _UGID; }
+
+        }
+        private string _EMPLOYEE_ID;
+        public string EMPLOYEE_ID
+        {
+            set { _EMPLOYEE_ID = value; }
+            get { return _EMPLOYEE_ID; }
 
         }
         private string _UNAME;
@@ -84,6 +99,12 @@ namespace XizheC
             get { return _PWD; }
 
         }
+        private string _AUID;
+        public string AUID
+        {
+            set { _AUID = value; }
+            get { return _AUID; }
+        }
         private bool _IFExecutionSUCCESS;
         public bool IFExecution_SUCCESS
         {
@@ -110,7 +131,18 @@ namespace XizheC
         {
             set { _sqlt = value; }
             get { return _sqlt; ; }
-
+        }
+        private string _sqlth;
+        public string sqlth
+        {
+            set { _sqlth = value; }
+            get { return _sqlth; }
+        }
+        private string _sqlf;
+        public string sqlf
+        {
+            set { _sqlf = value; }
+            get { return _sqlf; }
         }
         #endregion
         #region sql
@@ -119,13 +151,15 @@ namespace XizheC
 SELECT
 A.USID AS 用户编号,
 A.UNAME AS 用户名,
-A.EMID AS 员工编号,
+(SELECT EMPLOYEE_ID FROM EMPLOYEEINFO  WHERE EMID=A.EMID) AS 员工工号,
 B.ENAME AS 姓名,
-A.USER_GROUP AS 用户组,
+C.USER_GROUP AS 用户组,
 (SELECT ENAME FROM EMPLOYEEINFO  WHERE EMID=A.MAKERID) AS 制单人,
 A.DATE AS 制单日期 
 FROM   USERINFO  A 
 LEFT JOIN EMPLOYEEINFO B ON A.EMID=B.EMID
+LEFT JOIN USER_GROUP C ON A.UGID=C.UGID
+
 
 ";
         string setsqlo = @"
@@ -134,6 +168,7 @@ USID,
 UNAME, 
 PWD, 
 EMID, 
+UGID,
 USER_GROUP,
 MAKERID,
 DATE,
@@ -147,6 +182,7 @@ MONTH
 @UNAME, 
 @PWD, 
 @EMID, 
+@UGID,
 @USER_GROUP,
 @MAKERID,
 @DATE,
@@ -165,6 +201,7 @@ USID=@USID,
 UNAME=@UNAME,
 PWD=@PWD,
 EMID=@EMID,
+UGID=@UGID,
 USER_GROUP=@USER_GROUP,
 MAKERID=@MAKERID,
 DATE=@DATE,
@@ -172,7 +209,62 @@ YEAR=@YEAR,
 MONTH=@MONTH
 
 ";
-       
+
+        string setsqlth = @"
+INSERT INTO 
+AUTHORIZATION_USER
+(
+AUID,
+USID,
+STATUS,
+LOGIN_DATE,
+LEAVE_DATE,
+CLIENT_IP ,
+COMPUTER_NAME,
+YEAR,
+MONTH
+)  
+VALUES 
+(
+@AUID,
+@USID,
+@STATUS,
+@LOGIN_DATE,
+@LEAVE_DATE,
+@CLIENT_IP ,
+@COMPUTER_NAME,
+@YEAR,
+@MONTH
+)"
+ ;
+        string setsqlf = @"
+SELECT
+A.AUID AS 编号, 
+B.UNAME AS 用户名,
+C.ENAME AS 姓名,
+A.COMPUTER_NAME AS 计算机名,
+A.CLIENT_IP AS IP地址,
+CASE WHEN A.STATUS='Y' THEN '在线'
+ELSE '离线'
+END  AS 状态,
+A.LOGIN_DATE AS 登录时间,
+CASE WHEN CONVERT(VARCHAR(10),A.LEAVE_DATE,120)='1900-01-01' THEN ''
+ELSE A.LEAVE_DATE 
+END
+AS 离开时间,
+CASE WHEN  CONVERT(VARCHAR(10),LEAVE_DATE,120)='1900-01-01' THEN DATEDIFF(N,LOGIN_DATE,GETDATE())
+ELSE DATEDIFF(N,LOGIN_DATE,LEAVE_DATE)
+END AS 在线分钟,
+CASE WHEN A.IF_COMPUTER_UPDATE='Y' THEN '是'
+ELSE '否'
+END  AS 状态是否来自更新,
+A.COMPUTER_UPDATE_DATE AS 更新时间
+FROM OFFER.DBO.AUTHORIZATION_USER A 
+LEFT JOIN USERINFO B ON A.USID=B.USID 
+LEFT JOIN EMPLOYEEINFO C ON B.EMID=C.EMID
+WHERE CONVERT(VARCHAR(10),A.LOGIN_DATE,111)=CONVERT(VARCHAR(10),GETDATE(),111)
+ORDER BY LOGIN_DATE DESC
+";
 
 
 
@@ -183,6 +275,8 @@ MONTH=@MONTH
             sql = setsql;
             sqlo = setsqlo;
             sqlt = setsqlt;
+            sqlth = setsqlth;
+            sqlf = setsqlf;
         }
         public CUSER(string USID)
         {
@@ -234,7 +328,16 @@ MONTH=@MONTH
             return dtt;
         }
         #endregion
-
+        public string GETID_AUID()
+        {
+            string v1 = bc.numYM(10, 4, "0001", "SELECT * FROM AUTHORIZATION_USER", "AUID", "AU");
+            string GETID = "";
+            if (v1 != "Exceed Limited")
+            {
+                GETID = v1;
+            }
+            return GETID;
+        }
         #region GET_NODEID
         public int GET_NODEID(string NODE_NAME)
         {
@@ -394,9 +497,40 @@ LEFT JOIN EMPLOYEEINFO B ON A.EMID =B.EMID WHERE A.UNAME='" + UNAME + "'";
             sqlcom.Parameters.Add("@UNAME", SqlDbType.VarChar, 20).Value = NAMEVALUE;
             sqlcom.Parameters.Add("@PWD", SqlDbType.Binary, 50).Value = B;
             sqlcom.Parameters.Add("@EMID", SqlDbType.VarChar, 20).Value = EMID;
+            sqlcom.Parameters.Add("@UGID", SqlDbType.VarChar, 20).Value = UGID;
             sqlcom.Parameters.Add("@USER_GROUP", SqlDbType.VarChar, 20).Value = USER_GROUP;
             sqlcom.Parameters.Add("@MAKERID", SqlDbType.VarChar, 20).Value = MAKERID;
             sqlcom.Parameters.Add("@DATE", SqlDbType.VarChar, 20).Value = varDate;
+            sqlcom.Parameters.Add("@YEAR", SqlDbType.VarChar, 20).Value = year;
+            sqlcom.Parameters.Add("@MONTH", SqlDbType.VarChar, 20).Value = month;
+            sqlcon.Open();
+            sqlcom.ExecuteNonQuery();
+            sqlcon.Close();
+            if (bc.exists("SELECT * FROM RIGHTLIST WHERE USID='" + USER_GROUP + "'"))
+            {
+                dt = bc.getdt("SELECT * FROM RIGHTLIST WHERE USID='" + USER_GROUP + "'");
+                cedit_right.SQlcommandE_USER_GROUP_USERD(dt, USID, EMID, USER_GROUP);
+               
+            }
+        }
+        #endregion
+        #region SQlcommandE
+        public void SQlcommandE(string sql)
+        {
+            string year = DateTime.Now.ToString("yy");
+            string month = DateTime.Now.ToString("MM");
+            string day = DateTime.Now.ToString("dd");
+            string varDate = DateTime.Now.ToString("yyy/MM/dd HH:mm:ss").Replace("-", "/");
+            string varMakerID = bc.getOnlyString("SELECT EMID FROM USERINFO WHERE USID='" + USID + "'");
+            SqlConnection sqlcon = bc.getcon();
+            SqlCommand sqlcom = new SqlCommand(sql, sqlcon);
+            sqlcom.Parameters.Add("@AUID", SqlDbType.VarChar, 20).Value = AUID;
+            sqlcom.Parameters.Add("@USID", SqlDbType.VarChar, 20).Value = USID;
+            sqlcom.Parameters.Add("@STATUS", SqlDbType.VarChar, 20).Value = "Y";
+            sqlcom.Parameters.Add("@LOGIN_DATE", SqlDbType.VarChar, 20).Value = varDate;
+            sqlcom.Parameters.Add("@LEAVE_DATE", SqlDbType.VarChar, 20).Value = "";
+            sqlcom.Parameters.Add("@CLIENT_IP", SqlDbType.VarChar, 20).Value = bc.GetIP4Address();
+            sqlcom.Parameters.Add("@COMPUTER_NAME", SqlDbType.VarChar, 20).Value = bc.GetComputerName();
             sqlcom.Parameters.Add("@YEAR", SqlDbType.VarChar, 20).Value = year;
             sqlcom.Parameters.Add("@MONTH", SqlDbType.VarChar, 20).Value = month;
             sqlcon.Open();

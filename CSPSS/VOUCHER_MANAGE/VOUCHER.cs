@@ -8,6 +8,9 @@ using System.Text;
 using System.Windows.Forms;
 using System.Data.SqlClient;
 using XizheC;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
+using System.IO;
 
 namespace CSPSS.VOUCHER_MANAGE
 {
@@ -373,7 +376,8 @@ namespace CSPSS.VOUCHER_MANAGE
             if (dt.Rows.Count > 0)
             {
                
-                bc.dgvtoExcel(dataGridView1, "凭证明细");
+                //bc.dgvtoExcel(dataGridView1, "凭证明细");
+                bc.dgvtoExcel_for_epplus(dataGridView1, "凭证明细");
                 
             }
             else

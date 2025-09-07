@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CSPSS</RootNamespace>
     <AssemblyName>财务管理系统</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <StartupObject>
     </StartupObject>
@@ -20,6 +20,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,6 +31,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -39,21 +41,54 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Office.Interop.Excel, Version=11.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c" />
+    <Reference Include="EPPlus">
+      <HintPath>bin\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus.Interfaces">
+      <HintPath>bin\EPPlus.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus.System.Drawing">
+      <HintPath>bin\EPPlus.System.Drawing.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>bin\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IO.RecyclableMemoryStream">
+      <HintPath>bin\Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=11.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>bin\Microsoft.Office.Interop.Excel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Common, Version=4.1.0.0, Culture=neutral, PublicKeyToken=e44a2bc38ed2c13c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Microsoft.Practices.EnterpriseLibrary.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Data">
+      <HintPath>bin\Microsoft.Practices.EnterpriseLibrary.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Memory">
+      <HintPath>bin\System.Memory.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Windows.Forms.DataVisualization, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -64,7 +99,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="XizheC, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Debug\XizheC.dll</HintPath>
+      <HintPath>bin\Debug\XizheC.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -91,12 +126,6 @@
     </Compile>
     <Compile Include="BASE_INFO\EMPLOYEE_INFO.designer.cs">
       <DependentUpon>EMPLOYEE_INFO.cs</DependentUpon>
-    </Compile>
-    <Compile Include="BASE_INFO\PAYMENT_METHOD .cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="BASE_INFO\PAYMENT_METHOD .designer.cs">
-      <DependentUpon>PAYMENT_METHOD .cs</DependentUpon>
     </Compile>
     <Compile Include="BASE_INFO\POSITION.cs">
       <SubType>Form</SubType>
@@ -130,6 +159,7 @@
     <Compile Include="REPORT_MANAGE\BALANCE_SEARCH.designer.cs">
       <DependentUpon>BALANCE_SEARCH.cs</DependentUpon>
     </Compile>
+    <Compile Include="Resource1.Designer.cs" />
     <Compile Include="USER_MANAGE\EDIT_PWD.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -193,10 +223,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="bin\Debug\财务管理系统.exe.config" />
-    <None Include="bin\Debug\财务管理系统.vshost.exe.config" />
-    <None Include="bin\Debug\财务管理系统.vshost.exe.manifest" />
-    <None Include="bin\Debug\资产负债表.xls" />
+    <None Include="bin\Debug\print_model\资产负债表.xls" />
+    <None Include="bin\Debug\print_model\资产负债表.xlsx" />
+    <None Include="bin\资产负债表.xlsx" />
+    <None Include="Templates\资产负债表.xls" />
+    <None Include="Templates\资产负债表.xlsx" />
+    <None Include="Properties\资产负债表.xls" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="BASE_INFO\CURRENCY.resx">
@@ -210,9 +242,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="BASE_INFO\EMPLOYEE_INFO.resx">
       <DependentUpon>EMPLOYEE_INFO.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="BASE_INFO\PAYMENT_METHOD .resx">
-      <DependentUpon>PAYMENT_METHOD .cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="BASE_INFO\POSITION.resx">
       <DependentUpon>POSITION.cs</DependentUpon>
@@ -229,6 +258,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="REPORT_MANAGE\BALANCE_SEARCH.resx">
       <DependentUpon>BALANCE_SEARCH.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resource1.resx">
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="USER_MANAGE\EDIT_PWD.resx">
       <DependentUpon>EDIT_PWD.cs</DependentUpon>
@@ -262,79 +294,76 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="bin\CrystalDecisions.CrystalReports.Engine.dll" />
-    <Content Include="bin\CrystalDecisions.Data.AdoDotNetInterop.dll" />
-    <Content Include="bin\CrystalDecisions.ReportSource.dll" />
-    <Content Include="bin\CrystalDecisions.Shared.dll" />
-    <Content Include="bin\Debug\Image\1.png" />
-    <Content Include="bin\Debug\Image\10.png" />
-    <Content Include="bin\Debug\Image\11.png" />
-    <Content Include="bin\Debug\Image\11s.png" />
-    <Content Include="bin\Debug\Image\12.png" />
-    <Content Include="bin\Debug\Image\13.png" />
-    <Content Include="bin\Debug\Image\132.png" />
-    <Content Include="bin\Debug\Image\14.png" />
-    <Content Include="bin\Debug\Image\15.png" />
-    <Content Include="bin\Debug\Image\16.png" />
-    <Content Include="bin\Debug\Image\17.png" />
-    <Content Include="bin\Debug\Image\18.png" />
-    <Content Include="bin\Debug\Image\19.png" />
-    <Content Include="bin\Debug\Image\1X24X24.png" />
-    <Content Include="bin\Debug\Image\2.png" />
-    <Content Include="bin\Debug\Image\20.png" />
-    <Content Include="bin\Debug\Image\201.png" />
-    <Content Include="bin\Debug\Image\20150101124303991_easyicon_net_48.png" />
-    <Content Include="bin\Debug\Image\21.png" />
-    <Content Include="bin\Debug\Image\211.png" />
-    <Content Include="bin\Debug\Image\22.png" />
-    <Content Include="bin\Debug\Image\23.png" />
-    <Content Include="bin\Debug\Image\24.png" />
-    <Content Include="bin\Debug\Image\25.png" />
-    <Content Include="bin\Debug\Image\26.png" />
-    <Content Include="bin\Debug\Image\27.png" />
-    <Content Include="bin\Debug\Image\28.png" />
-    <Content Include="bin\Debug\Image\29.png" />
-    <Content Include="bin\Debug\Image\3.png" />
-    <Content Include="bin\Debug\Image\30.png" />
-    <Content Include="bin\Debug\Image\31.png" />
-    <Content Include="bin\Debug\Image\32.png" />
-    <Content Include="bin\Debug\Image\33.png" />
-    <Content Include="bin\Debug\Image\34.png" />
-    <Content Include="bin\Debug\Image\35.png" />
-    <Content Include="bin\Debug\Image\36.png" />
-    <Content Include="bin\Debug\Image\37.png" />
-    <Content Include="bin\Debug\Image\38.png" />
-    <Content Include="bin\Debug\Image\39.png" />
-    <Content Include="bin\Debug\Image\4.png" />
-    <Content Include="bin\Debug\Image\40.png" />
-    <Content Include="bin\Debug\Image\41.png" />
-    <Content Include="bin\Debug\Image\42.png" />
-    <Content Include="bin\Debug\Image\5.png" />
-    <Content Include="bin\Debug\Image\6.png" />
-    <Content Include="bin\Debug\Image\7.png" />
-    <Content Include="bin\Debug\Image\8.png" />
-    <Content Include="bin\Debug\Image\88.png" />
-    <Content Include="bin\Debug\Image\9.png" />
-    <Content Include="bin\Debug\Image\99.png" />
-    <Content Include="bin\Debug\Image\del.png" />
-    <Content Include="bin\Debug\Image\search.png" />
-    <Content Include="bin\Debug\Image\search2.png" />
-    <Content Include="bin\Debug\Microsoft.Office.Interop.Excel.dll" />
-    <Content Include="bin\Debug\Microsoft.Vbe.Interop.dll" />
-    <Content Include="bin\Debug\office.dll" />
-    <Content Include="bin\Debug\XizheC.dll" />
-    <Content Include="bin\Debug\XizheC.pdb" />
-    <Content Include="bin\Debug\财务管理系统.exe" />
-    <Content Include="bin\Debug\财务管理系统.pdb" />
     <Content Include="bin\Debug\财务管理系统.vshost.exe" />
-    <Content Include="bin\Microsoft.Office.Interop.Excel.dll" />
-    <Content Include="bin\Microsoft.Vbe.Interop.dll" />
-    <Content Include="bin\office.dll" />
+    <Content Include="bin\EPPlus.dll" />
+    <Content Include="bin\EPPlus.Interfaces.dll" />
+    <Content Include="bin\EPPlus.System.Drawing.dll" />
+    <Content Include="bin\ICSharpCode.SharpZipLib.dll" />
+    <Content Include="bin\Microsoft.IO.RecyclableMemoryStream.dll" />
+    <Content Include="bin\Microsoft.Practices.EnterpriseLibrary.Common.dll" />
+    <Content Include="bin\Microsoft.Practices.EnterpriseLibrary.Data.dll" />
+    <Content Include="bin\Newtonsoft.Json.dll" />
+    <Content Include="bin\System.Memory.dll" />
+    <Content Include="Image\1.png" />
+    <Content Include="Image\10.png" />
+    <Content Include="Image\11.png" />
+    <Content Include="Image\11s.png" />
+    <Content Include="Image\12.png" />
+    <Content Include="Image\13.png" />
+    <Content Include="Image\132.png" />
+    <Content Include="Image\14.png" />
+    <Content Include="Image\15.png" />
+    <Content Include="Image\16.png" />
+    <Content Include="Image\17.png" />
+    <Content Include="Image\18.png" />
+    <Content Include="Image\19.png" />
+    <Content Include="Image\1X24X24.png" />
+    <Content Include="Image\2.png" />
+    <Content Include="Image\20.png" />
+    <Content Include="Image\201.png" />
+    <Content Include="Image\20150101124303991_easyicon_net_48.png" />
+    <Content Include="Image\21.png" />
+    <Content Include="Image\211.png" />
+    <Content Include="Image\22.png" />
+    <Content Include="Image\23.png" />
+    <Content Include="Image\24.png" />
+    <Content Include="Image\25.png" />
+    <Content Include="Image\26.png" />
+    <Content Include="Image\27.png" />
+    <Content Include="Image\28.png" />
+    <Content Include="Image\29.png" />
+    <Content Include="Image\3.png" />
+    <Content Include="Image\30.png" />
+    <Content Include="Image\31.png" />
+    <Content Include="Image\32.png" />
+    <Content Include="Image\33.png" />
+    <Content Include="Image\34.png" />
+    <Content Include="Image\35.png" />
+    <Content Include="Image\36.png" />
+    <Content Include="Image\37.png" />
+    <Content Include="Image\38.png" />
+    <Content Include="Image\39.png" />
+    <Content Include="Image\4.png" />
+    <Content Include="Image\40.png" />
+    <Content Include="Image\41.png" />
+    <Content Include="Image\42.png" />
+    <Content Include="Image\5.png" />
+    <Content Include="Image\6.png" />
+    <Content Include="Image\7.png" />
+    <Content Include="Image\8.png" />
+    <Content Include="Image\88.png" />
+    <Content Include="Image\9.png" />
+    <Content Include="Image\99.png" />
     <Content Include="Image\btnAdd.png" />
+    <Content Include="Image\btnDelete.png" />
     <Content Include="Image\btnExit.png" />
     <Content Include="Image\btnSave.png" />
     <Content Include="Image\btnSearch.png" />
+    <Content Include="Image\del.png" />
+    <Content Include="Image\Excel.png" />
     <Content Include="Image\Excel1.png" />
+    <Content Include="Image\search.png" />
+    <Content Include="Image\search2.png" />
     <Content Include="xz 200X200.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

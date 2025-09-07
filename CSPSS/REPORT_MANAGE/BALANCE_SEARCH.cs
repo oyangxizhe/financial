@@ -11,6 +11,7 @@ using Excel = Microsoft.Office.Interop.Excel;
 using System.IO;
 using System.Reflection;
 using XizheC;
+using System.Configuration;
 
 
 namespace CSPSS.REPORT_MANAGE
@@ -228,8 +229,10 @@ DATE=@DATE
                     "' AND PERIOD='" + numericUpDown2.Value + "'");
                 string v2 = bc.getOnlyString("SELECT ACCOUNTING_PERIOD_EXPIRATION_DATE FROM PERIOD WHERE FINANCIAL_YEAR='" + numericUpDown1.Value +
                "' AND PERIOD='" + numericUpDown4.Value + "'");
+
+                string basePath = PathConfig.TemplatePath;
                 the_balance_sheet.ExcelPrint(@" WHERE B.VOUCHER_DATE BETWEEN '" +v1+"' AND '"+v2+
-                "' AND B.STATUS IN ('OPEN','INITIAL','CARRY') ", System.IO.Path.GetFullPath(@"资产负债表.xls"));
+                "' AND B.STATUS IN ('OPEN','INITIAL','CARRY') ",basePath);
             
             }
            
